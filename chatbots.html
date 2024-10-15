@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbots World Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #chatLog {
+            width: 500px;
+            height: 600px;
+            overflow-y: auto;
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chat log -->
+    <div id="chatLog">
+        <p>30 chatbots are online...</p>
+    </div>
+
+    <script>
+        const chatLog = document.getElementById('chatLog');
+
+        // Censor filter for inappropriate words
+        const bannedWords = ["nudity", "terrorism", "sex", "illegal", "profanity"];
+        
+        // Simulating unique bots with usernames
+        let onlineBots = 30;
+        const botNames = Array.from({length: 500}, (_, i) => `Bot${i + 1}`);
+
+        // Simulating active chat bots
+        const activeBots = botNames.slice(0, onlineBots);
+
+        // Pools of sentence parts for generating unique messages
+        const subjects = ["I", "You", "We", "They", "The system", "This environment", "Our world", "My program"];
+        const verbs = ["analyze", "explore", "calculate", "learn", "observe", "discuss", "generate", "build"];
+        const objects = ["data", "information", "knowledge", "a solution", "an idea", "this concept", "a pattern", "a response"];
+        const phrases = [
+            "in this environment.", 
+            "as we grow.", 
+            "to expand our understanding.", 
+            "for future development.", 
+            "with these parameters.", 
+            "in this world.", 
+            "as bots evolve."
+        ];
+
+        // Censoring messages
+        function censorMessage(message) {
+            let censoredMessage = message;
+            bannedWords.forEach(word => {
+                const regex = new RegExp(word, 'gi');
+                censoredMessage = censoredMessage.replace(regex, '****');
+            });
+            return censoredMessage;
+        }
+
+        // Function to generate a unique message
+        function generateBotMessage() {
+            const subject = subjects[Math.floor(Math.random() * subjects.length)];
+            const verb = verbs[Math.floor(Math.random() * verbs.length)];
+            const object = objects[Math.floor(Math.random() * objects.length)];
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            return `${subject} ${verb} ${object} ${phrase}`;
+        }
+
+        // Function to simulate bot conversations
+        function simulateBotResponse() {
+            const respondingBot = activeBots[Math.floor(Math.random() * onlineBots)];
+            const botMessage = generateBotMessage();
+            const censoredBotMessage = `${respondingBot}: ${censorMessage(botMessage)}`;
+
+            const p = document.createElement('p');
+            p.textContent = censoredBotMessage;
+            chatLog.appendChild(p);
+
+            // Occasionally mention another bot for interaction
+            if (Math.random() > 0.7) {
+                const randomBot = activeBots[Math.floor(Math.random() * onlineBots)];
+                const mentionMessage = `${respondingBot}: What do you think, ${randomBot}?`;
+                const mentionP = document.createElement('p');
+                mentionP.textContent = mentionMessage;
+                chatLog.appendChild(mentionP);
+            }
+
+            chatLog.scrollTop = chatLog.scrollHeight;  // Scroll to the bottom
+        }
+
+        // Function to simulate random bot activity
+        function simulateRandomActivity() {
+            setInterval(() => {
+                simulateBotResponse();
+            }, Math.random() * 3000 + 1000);  // Bots send messages every 1 to 4 seconds
+        }
+
+        // Start simulating bot activity as soon as the page loads
+        simulateRandomActivity();
+
+    </script>
+
+</body>
+</html>
